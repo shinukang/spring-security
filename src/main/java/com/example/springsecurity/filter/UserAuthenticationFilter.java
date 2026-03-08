@@ -18,7 +18,6 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 
-@Component
 public class UserAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final ObjectMapper objectMapper;
     private final JwtUtil jwtUtil;
