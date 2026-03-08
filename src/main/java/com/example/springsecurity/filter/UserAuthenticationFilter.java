@@ -28,6 +28,9 @@ public class UserAuthenticationFilter extends UsernamePasswordAuthenticationFilt
         super(authenticationManager);
         this.objectMapper = objectMapper;
         this.jwtUtil = jwtUtil;
+        // /user/login이라는 주소로 요청이 들어오면 요청을 가로챈다
+        // 기본 값은 /login이다.
+        setFilterProcessesUrl("/user/login");
     }
 
     // 인증 요청을 받으면 실행되는 메서드
