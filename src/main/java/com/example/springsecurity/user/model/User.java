@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -19,6 +20,8 @@ public class User {
     @Column(unique = true)
     private String email;
     private String password;
-    private String role;
-    private Boolean enable;
+    @Builder.Default
+    private String role = "ROLE_USER";
+    @Builder.Default
+    private Boolean enable = true;
 }
