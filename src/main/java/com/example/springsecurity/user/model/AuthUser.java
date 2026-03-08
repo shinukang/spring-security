@@ -14,6 +14,8 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class AuthUser implements UserDetails {
+    private Long idx;
+    private String name;
     private String email;
     private String password;
     private String role;
@@ -21,6 +23,8 @@ public class AuthUser implements UserDetails {
 
     public static AuthUser fromEntity(User entity) {
         return AuthUser.builder()
+                .idx(entity.getIdx())
+                .name(entity.getName())
                 .email(entity.getEmail())
                 .password(entity.getPassword())
                 .role(entity.getRole())

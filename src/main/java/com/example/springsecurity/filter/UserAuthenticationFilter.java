@@ -2,6 +2,7 @@ package com.example.springsecurity.filter;
 
 import com.example.springsecurity.user.model.AuthUser;
 import com.example.springsecurity.user.model.UserDto;
+import com.example.springsecurity.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,11 +21,13 @@ import java.io.IOException;
 @Component
 public class UserAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final ObjectMapper objectMapper;
+    private final JwtUtil jwtUtil;
 
     // UsernamePasswordAuthenticationFilter는 AuthenticationManager를 의존성 주입 받아야한다.
-    public UserAuthenticationFilter(AuthenticationManager authenticationManager, ObjectMapper objectMapper) {
+    public UserAuthenticationFilter(AuthenticationManager authenticationManager, ObjectMapper objectMapper, JwtUtil jwtUtil) {
         super(authenticationManager);
         this.objectMapper = objectMapper;
+        this.jwtUtil = jwtUtil;
     }
 
     // 인증 요청을 받으면 실행되는 메서드
@@ -46,8 +49,9 @@ public class UserAuthenticationFilter extends UsernamePasswordAuthenticationFilt
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         // 1. jwt를 만든다.
+        String token = jwtUtil.createToken((AuthUser) authResult.getPrincipal());
         // 2. 1에서 만든 jwt를 쿠키에 담아 응답을 보낸다.
-        super.successfulAuthentication(request, response, chain, authResult);
+        response.setHeader("Set-Cookie", "ATOKEN=" + token + ", Path=/");
     }
 
     // 인증에 실패하면 실행되는 메서드
