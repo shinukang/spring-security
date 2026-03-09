@@ -1,6 +1,7 @@
 package com.example.springsecurity.util;
 
 import com.example.springsecurity.user.model.AuthUser;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,5 +33,13 @@ public class JwtUtil {
                 .claim("role", user.getRole())
                 .expiration(Date.from(Instant.now().plusMillis(expire)))                .signWith(secretKey)
                 .compact();
+    }
+
+    public Claims parseToken(String jwt) {
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(jwt)
+                .getPayload();
     }
 }
