@@ -5,15 +5,15 @@ import com.example.springsecurity.user.model.UserDto;
 import com.example.springsecurity.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Component;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -51,9 +51,12 @@ public class UserAuthenticationFilter extends UsernamePasswordAuthenticationFilt
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         // 1. jwt를 만든다.
-        String token = jwtUtil.createToken((AuthUser) authResult.getPrincipal());
+        AuthUser user = (AuthUser) authResult.getPrincipal();
+        String token = jwtUtil.createToken(user);
         // 2. 1에서 만든 jwt를 쿠키에 담아 응답을 보낸다.
-        response.setHeader("Set-Cookie", "ATOKEN=" + token + ", Path=/");
+        Cookie cookie = new Cookie("ATOKEN", token);
+        cookie.setPath("/");
+        response.addCookie(cookie);
     }
 
     // 인증에 실패하면 실행되는 메서드

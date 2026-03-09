@@ -3,6 +3,7 @@ package com.example.springsecurity.user.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +14,7 @@ import java.util.List;
 @Builder()
 @Getter
 @AllArgsConstructor
+@ToString
 public class AuthUser implements UserDetails {
     private Long idx;
     private String name;

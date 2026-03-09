@@ -27,7 +27,9 @@ public class SecurityConfig {
         // 모든 경로에 대한 접근 허용
         httpSecurity.authorizeHttpRequests(
                 (auth) -> auth
-                        .anyRequest().permitAll()
+                        .requestMatchers("/user/**").permitAll()
+                        .requestMatchers("/test/admin").hasRole("ADMIN")
+                        .anyRequest().authenticated()
         );
         // CSRF 방어 기능을 중지하는 코드
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
@@ -37,7 +39,7 @@ public class SecurityConfig {
         httpSecurity.formLogin(AbstractHttpConfigurer::disable);
         // 커스텀 필터로 대체
 
-        httpSecurity.addFilterBefore(new UserAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.addFilterBefore(new UserAuthorizationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
         httpSecurity.addFilterAt(new UserAuthenticationFilter(authenticationManager, objectMapper, jwtUtil), UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
